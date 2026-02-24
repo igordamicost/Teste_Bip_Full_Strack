@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MessageService } from 'primeng/api';
 import { Beneficio } from '../../core/models';
 import { ApiService } from '../../services/api.service';
 import { DialogService } from '../../shared/services/dialog.service';
@@ -33,6 +34,7 @@ export class BeneficioListComponent implements OnInit {
   constructor(
     private api: ApiService,
     private dialog: DialogService,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +53,12 @@ export class BeneficioListComponent implements OnInit {
         if (ok) {
           this.api.excluir(b.id!).subscribe({
             next: () => (this.dataSource.data = this.dataSource.data.filter((x) => x.id !== b.id)),
-            error: (e) => alert(e.error?.error || 'Erro ao excluir'),
+            error: (e) =>
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Erro ao excluir',
+                detail: e.error?.error || 'Erro ao excluir',
+              }),
           });
         }
       });

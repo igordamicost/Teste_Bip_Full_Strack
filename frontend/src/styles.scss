@@ -1,5 +1,9 @@
 @use '@angular/material' as mat;
 
+@import 'primeng/resources/themes/lara-light-blue/theme.css';
+@import 'primeng/resources/primeng.min.css';
+@import 'primeicons/primeicons.css';
+
 @include mat.core();
 
 $primary: mat.define-palette(mat.$indigo-palette);

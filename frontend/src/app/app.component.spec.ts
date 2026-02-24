@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
 
@@ -13,7 +14,10 @@ describe('AppComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [AppComponent, RouterTestingModule, NoopAnimationsModule],
-      providers: [{ provide: AuthService, useValue: authService }],
+      providers: [
+        { provide: AuthService, useValue: authService },
+        MessageService,
+      ],
     }).compileComponents();
   });
 

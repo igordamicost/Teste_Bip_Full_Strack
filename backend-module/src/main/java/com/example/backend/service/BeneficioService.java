@@ -58,10 +58,9 @@ public class BeneficioService {
 
     @Transactional
     public void excluir(Long id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Benefício não encontrado: " + id);
-        }
-        repository.deleteById(id);
+        Beneficio existente = buscarPorId(id);
+        // buscarPorId já aplica as regras especiais (404/403) para Benefício E e F
+        repository.delete(existente);
     }
 
     @Transactional(rollbackFor = Exception.class)

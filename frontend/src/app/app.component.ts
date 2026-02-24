@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { ToastModule } from 'primeng/toast';
 import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterOutlet, RouterLink],
+  imports: [MatToolbarModule, MatButtonModule, RouterOutlet, RouterLink, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

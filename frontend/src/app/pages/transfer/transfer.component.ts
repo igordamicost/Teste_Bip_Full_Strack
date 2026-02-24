@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MessageService } from 'primeng/api';
 import { Beneficio, TransferenciaRequest } from '../../core/models';
 import { ApiService } from '../../services/api.service';
 import { PageToolbarComponent } from '../../shared/components/page-toolbar/page-toolbar.component';
@@ -24,7 +24,6 @@ import { PageToolbarComponent } from '../../shared/components/page-toolbar/page-
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
-    MatSnackBarModule,
     PageToolbarComponent,
   ],
   templateUrl: './transfer.component.html',
@@ -39,7 +38,7 @@ export class TransferComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private snackBar: MatSnackBar,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +60,11 @@ export class TransferComponent implements OnInit {
       next: () => {
         this.amount = 0;
         this.api.listarTodos().subscribe((list) => (this.beneficios = list));
-        this.snackBar.open('Transferência realizada.', 'Fechar', { duration: 3000 });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Transferência',
+          detail: 'Transferência realizada.',
+        });
       },
       error: (e) => (this.error = e.error?.error || 'Erro na transferência'),
     });

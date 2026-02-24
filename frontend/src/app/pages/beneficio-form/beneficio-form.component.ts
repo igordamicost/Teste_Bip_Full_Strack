@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { MessageService } from 'primeng/api';
 import { Beneficio } from '../../core/models';
 import { ApiService } from '../../services/api.service';
 import { PageToolbarComponent } from '../../shared/components/page-toolbar/page-toolbar.component';
@@ -34,6 +35,7 @@ export class BeneficioFormComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private route: ActivatedRoute,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -52,12 +54,22 @@ export class BeneficioFormComponent implements OnInit {
     if (this.id != null) {
       this.api.atualizar(this.id, this.model).subscribe({
         next: () => this.router.navigate(['/']),
-        error: (e) => alert(e.error?.error || 'Erro ao atualizar'),
+        error: (e) =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro ao atualizar',
+            detail: e.error?.error || 'Erro ao atualizar',
+          }),
       });
     } else {
       this.api.criar(this.model).subscribe({
         next: () => this.router.navigate(['/']),
-        error: (e) => alert(e.error?.error || 'Erro ao criar'),
+        error: (e) =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro ao criar',
+            detail: e.error?.error || 'Erro ao criar',
+          }),
       });
     }
   }

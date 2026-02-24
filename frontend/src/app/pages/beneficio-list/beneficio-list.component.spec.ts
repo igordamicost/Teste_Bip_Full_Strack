@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BeneficioListComponent } from './beneficio-list.component';
 import { ApiService } from '../../services/api.service';
 import { DialogService } from '../../shared/services/dialog.service';
+import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import type { Beneficio } from '../../core/models';
 
@@ -35,6 +36,7 @@ describe('BeneficioListComponent', () => {
       providers: [
         { provide: ApiService, useValue: apiService },
         { provide: DialogService, useValue: dialogService },
+        MessageService,
       ],
     }).compileComponents();
 
