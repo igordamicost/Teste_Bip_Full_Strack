@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.entity.Beneficio;
+import com.example.backend.exception.ForbiddenException;
+import com.example.backend.exception.NotFoundException;
 import com.example.backend.repository.BeneficioRepository;
 
 @Service
@@ -30,8 +32,10 @@ public class BeneficioService {
 
     @Transactional(readOnly = true)
     public Beneficio buscarPorId(Long id) {
-        return repository.findById(id)
+        Beneficio b = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Benefício não encontrado: " + id));
+        validarBeneficioEspecial(b);
+        return b;
     }
 
     @Transactional
@@ -78,6 +82,8 @@ public class BeneficioService {
         if (to == null) {
             throw new IllegalArgumentException("Benefício de destino não encontrado: " + toId);
         }
+        validarBeneficioEspecial(from);
+        validarBeneficioEspecial(to);
         if (!from.isAtivo() || !to.isAtivo()) {
             throw new IllegalStateException("Benefícios devem estar ativos para transferência");
         }
@@ -93,5 +99,18 @@ public class BeneficioService {
 
         repository.save(from);
         repository.save(to);
+    }
+
+    private void validarBeneficioEspecial(Beneficio b) {
+        String nome = b.getNome();
+        if (nome == null) {
+            return;
+        }
+        if (nome.startsWith("Beneficio E - 404")) {
+            throw new NotFoundException("Benefício configurado para sempre retornar 404: " + b.getId());
+        }
+        if (nome.startsWith("Beneficio F - 403")) {
+            throw new ForbiddenException("Benefício configurado para sempre retornar 403: " + b.getId());
+        }
     }
 }

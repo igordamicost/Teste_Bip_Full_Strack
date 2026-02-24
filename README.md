@@ -14,14 +14,26 @@ Solução fullstack: backend Spring Boot (CRUD + transferência com validação 
 Na raiz do projeto:
 
 ```bash
-# Build e subir todos os serviços (DB, backend, frontend)
-docker compose up -d --build
+# Derrubar tudo
+docker compose down
 
-# Frontend: http://localhost
-# Backend API: http://localhost:8080
-# Swagger: http://localhost:8080/swagger-ui.html
-# Login: admin / admin123
+# Build e subir todos os serviços (DB, backend, frontend, Prometheus, Grafana)
+docker compose up -d --build
 ```
+
+Com tudo de pé:
+
+- Frontend: `http://localhost`
+- Backend API: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger-ui.html`
+- Actuator (lista): `http://localhost:8080/actuator`
+- Health: `http://localhost:8080/actuator/health`
+- Métricas Prometheus: `http://localhost:8080/actuator/prometheus`
+- Prometheus UI: `http://localhost:9090`
+- Grafana UI: `http://localhost:3000`
+  - Usuário: `admin`
+  - Senha: `admin`
+  - Dashboard principal: `Dashboards → Browse → "Beneficio API Overview"`
 
 O frontend em `http://localhost` usa o proxy nginx para `/api` apontando ao backend.
 
@@ -86,9 +98,27 @@ Todas as rotas de benefícios exigem header: `Authorization: Bearer <token>`.
 
 ## Observabilidade
 
-- **Health:** GET /actuator/health  
-- **Métricas:** GET /actuator/metrics  
-- **Prometheus:** GET /actuator/prometheus  
+### Backend (Spring Boot / Actuator)
+
+- Health: `GET http://localhost:8080/actuator/health`
+- Lista de métricas: `GET http://localhost:8080/actuator/metrics`
+- Endpoint de métricas para Prometheus: `GET http://localhost:8080/actuator/prometheus`
+
+### Prometheus
+
+- URL: `http://localhost:9090`
+- Target configurado: `backend:8080` (job `backend`, caminho `/actuator/prometheus`)
+- Exemplos de queries:
+  - `sum(rate(http_server_requests_seconds_count{job="backend"}[1m]))` – requisições/s
+  - `histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job="backend"}[5m])) by (le))` – p95 de latência
+
+### Grafana
+
+- URL: `http://localhost:3000`
+- Login: `admin` / `admin`
+- Datasource default: **Prometheus** (`http://prometheus:9090`)
+- Dashboard provisionado: **Beneficio API Overview**
+  - Mostra RQPS, latência p50/p95/p99, taxa de erro, status HTTP, heap, threads e CPU
 
 ## Segurança
 

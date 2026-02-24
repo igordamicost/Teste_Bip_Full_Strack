@@ -1,0 +1,327 @@
+{
+  "id": null,
+  "uid": null,
+  "title": "Beneficio API Overview",
+  "tags": ["spring-boot", "beneficio-api"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "editable": true,
+  "panels": [
+    {"type": "row", "title": "Visão geral", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0}, "collapsed": false, "id": 1},
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "RQPS (requisições/s)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 1},
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"backend\"}[1m]))",
+          "legendFormat": "rqps",
+          "interval": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "req/s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 5},
+              {"color": "red", "value": 20}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Taxa de erro (%)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 1},
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "100 * (sum(rate(http_server_requests_seconds_count{job=\"backend\",status!~\"2..\"}[5m])) / sum(rate(http_server_requests_seconds_count{job=\"backend\"}[5m])))",
+          "legendFormat": "erro %",
+          "interval": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 1},
+              {"color": "red", "value": 5}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Tempo médio (p95) HTTP (ms)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 1},
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"backend\"}[5m])) by (le)) * 1000",
+          "legendFormat": "p95",
+          "interval": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 500},
+              {"color": "red", "value": 1000}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Tempo máximo HTTP (ms)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 1},
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "expr": "max(http_server_requests_seconds_max{job=\"backend\"}) * 1000",
+          "legendFormat": "max",
+          "interval": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 1000},
+              {"color": "red", "value": 2000}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {"type": "row", "title": "HTTP detalhado", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 5}, "collapsed": false, "id": 6},
+    {
+      "id": 7,
+      "type": "graph",
+      "title": "Latência HTTP (p50 / p95 / p99) em ms",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{job=\"backend\",uri!=\"/actuator/prometheus\"}[5m])) by (le)) * 1000",
+          "legendFormat": "p50",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"backend\",uri!=\"/actuator/prometheus\"}[5m])) by (le)) * 1000",
+          "legendFormat": "p95",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{job=\"backend\",uri!=\"/actuator/prometheus\"}[5m])) by (le)) * 1000",
+          "legendFormat": "p99",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {
+      "id": 8,
+      "type": "graph",
+      "title": "Requisições por segundo por endpoint",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"backend\",uri!=\"/actuator/prometheus\"}[1m])) by (uri,method)",
+          "legendFormat": "{{method}} {{uri}}",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {
+      "id": 9,
+      "type": "graph",
+      "title": "Requisições por status HTTP",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14},
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"backend\"}[5m])) by (status)",
+          "legendFormat": "status {{status}}",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {
+      "id": 10,
+      "type": "graph",
+      "title": "Taxa de erro (não 2xx)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14},
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"backend\",status!~\"2..\"}[5m]))",
+          "legendFormat": "erros/s",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {"type": "row", "title": "JVM e recursos", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 22}, "collapsed": false, "id": 11},
+    {
+      "id": 12,
+      "type": "graph",
+      "title": "Heap usado (bytes)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 23},
+      "targets": [
+        {
+          "expr": "sum(jvm_memory_used_bytes{job=\"backend\",area=\"heap\"})",
+          "legendFormat": "heap used",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {
+      "id": 13,
+      "type": "graph",
+      "title": "Threads da JVM",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 23},
+      "targets": [
+        {
+          "expr": "sum(jvm_threads_live_threads{job=\"backend\"})",
+          "legendFormat": "live",
+          "interval": ""
+        },
+        {
+          "expr": "sum(jvm_threads_peak_threads{job=\"backend\"})",
+          "legendFormat": "peak",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    },
+    {
+      "id": 14,
+      "type": "graph",
+      "title": "Uso de CPU (processo vs sistema)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 31},
+      "targets": [
+        {
+          "expr": "avg(process_cpu_usage{job=\"backend\"})",
+          "legendFormat": "process",
+          "interval": ""
+        },
+        {
+          "expr": "avg(system_cpu_usage{job=\"backend\"})",
+          "legendFormat": "system",
+          "interval": ""
+        }
+      ],
+      "lines": true,
+      "linewidth": 2,
+      "fill": 1,
+      "nullPointMode": "null",
+      "legend": {"show": true}
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "uri",
+        "type": "query",
+        "datasource": "Prometheus",
+        "refresh": 1,
+        "query": "label_values(http_server_requests_seconds_count{job=\"backend\"}, uri)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "label": "URI",
+        "current": {}
+      }
+    ]
+  },
+  "time": {"from": "now-15m", "to": "now"}
+}
+
