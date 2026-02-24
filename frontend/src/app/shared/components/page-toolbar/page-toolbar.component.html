@@ -1,0 +1,15 @@
+<div class="toolbar">
+  @if (title) {
+    <h1 class="toolbar-title">{{ title }}</h1>
+  }
+  <span class="spacer"></span>
+  @if (showBack) {
+    <a mat-button [routerLink]="backRoute">Voltar</a>
+  }
+  @if (showNew) {
+    <a mat-raised-button color="primary" routerLink="/novo">Novo benefício</a>
+  }
+  @if (showTransfer) {
+    <a mat-button routerLink="/transferir">Transferir</a>
+  }
+</div>

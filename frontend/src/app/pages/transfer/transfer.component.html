@@ -1,0 +1,41 @@
+<app-page-toolbar
+  title="Transferir entre benefícios"
+  [showBack]="true"
+  backRoute="/"
+></app-page-toolbar>
+
+<mat-card>
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit()" class="form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Origem</mat-label>
+        <mat-select [(ngModel)]="fromId" name="fromId" required>
+          <mat-option [value]="null">Selecione</mat-option>
+          @for (b of beneficios; track b.id) {
+            <mat-option [value]="b.id">{{ b.nome }} ({{ b.valor | number:'1.2-2' }})</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Destino</mat-label>
+        <mat-select [(ngModel)]="toId" name="toId" required>
+          <mat-option [value]="null">Selecione</mat-option>
+          @for (b of beneficios; track b.id) {
+            <mat-option [value]="b.id">{{ b.nome }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Valor</mat-label>
+        <input matInput type="number" step="0.01" [(ngModel)]="amount" name="amount" required />
+      </mat-form-field>
+      @if (error) {
+        <p class="error-message">{{ error }}</p>
+      }
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit">Transferir</button>
+        <a mat-button routerLink="/">Voltar</a>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,25 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+mat-card {
+  max-width: 500px;
+}
+
+.error-message {
+  color: var(--mat-warn-700, #c62828);
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0;
+}

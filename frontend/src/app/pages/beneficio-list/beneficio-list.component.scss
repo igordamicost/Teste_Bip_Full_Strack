@@ -1,0 +1,15 @@
+.full-width {
+  width: 100%;
+}
+
+mat-card {
+  margin-top: 0.5rem;
+}
+
+td.mat-cell {
+  padding: 0.5rem 1rem;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}

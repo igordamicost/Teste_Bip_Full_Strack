@@ -1,0 +1,12 @@
+@if (auth.isLoggedIn()) {
+  <mat-toolbar color="primary">
+    <a mat-button routerLink="/" routerLinkActive="active">Benefícios</a>
+    <a mat-button routerLink="/novo">Novo</a>
+    <a mat-button routerLink="/transferir">Transferir</a>
+    <span class="spacer"></span>
+    <button mat-button (click)="auth.logout()">Sair</button>
+  </mat-toolbar>
+}
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
