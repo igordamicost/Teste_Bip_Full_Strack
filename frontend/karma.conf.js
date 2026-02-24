@@ -1,4 +1,3 @@
-// Karma + Jasmine: runner de testes em browser
 module.exports = function (config) {
   config.set({
     basePath: '',

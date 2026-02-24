@@ -1,10 +1,8 @@
 /// <reference types="node" />
 /// <reference types="jest" />
-// Setup para Jest (jest-preset-angular) + compatibilidade com Jasmine
 import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 setupZoneTestEnv();
 
-// Polyfill para specs que usam jasmine.createSpyObj no Jest
 const g = typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : {}));
 (g as Record<string, unknown>)['jasmine'] = {
   createSpyObj: (_name: string, methods: string[]) => {

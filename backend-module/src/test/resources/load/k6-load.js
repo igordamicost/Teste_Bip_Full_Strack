@@ -1,8 +1,3 @@
-/**
- * Teste de carga com k6 (https://k6.io)
- * Executar: k6 run src/test/resources/load/k6-load.js
- * Com base URL: k6 run -e BASE_URL=http://localhost:8080 src/test/resources/load/k6-load.js
- */
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 

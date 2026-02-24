@@ -1,12 +1,13 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.Beneficio;
-import com.example.backend.repository.BeneficioRepository;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.example.backend.entity.Beneficio;
+import com.example.backend.repository.BeneficioRepository;
 
 @Service
 public class BeneficioService {
@@ -59,10 +60,6 @@ public class BeneficioService {
         repository.deleteById(id);
     }
 
-    /**
-     * Transfere valor entre dois benefícios com validação de saldo e locking pessimista
-     * para evitar saldo negativo e lost updates.
-     */
     @Transactional(rollbackFor = Exception.class)
     public void transferir(Long fromId, Long toId, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {

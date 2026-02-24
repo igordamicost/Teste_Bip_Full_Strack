@@ -12,10 +12,6 @@ public class BeneficioEjbService {
     @PersistenceContext
     private EntityManager em;
 
-    /**
-     * Transfere valor entre dois benefícios com validação de saldo, locking pessimista
-     * e rollback em caso de falha (transação EJB).
-     */
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Valor da transferência deve ser positivo");

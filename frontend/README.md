@@ -20,7 +20,7 @@ Os mesmos arquivos `*.spec.ts` rodam com **Jasmine** em dois runners:
 
 ```bash
 npm install
-npm start          # app em http://localhost:4200
-npm test           # Karma em watch
-npm run test:jest  # Jest uma vez
+npm start 
+npm test  
+npm run test:jest
 ```
